@@ -574,7 +574,7 @@ export default function Home() {
 2025125652	PRISCILA DE OLIVEIRA BOENO 10,00	2,00	2,00	4,00	36,00	54,00	Ampla Concorrência
 2025125597	ROBERTA PEREIRA FERNANDES 8,00	4,00	2,00	2,00	38,00	54,00	Ampla Concorrência
 2025115191	SOFIA CHAGAS NALESSO 8,00	8,00	2,00	6,00	42,00	66,00	Ampla Concorrência
-`  
+`
     const dadosNutricionista = `
     2025125365	ALESSANDRA LACERDA DE LIMA 10,00	4,00	0,00	2,00	42,00	58,00	Ampla Concorrência
 2025114531	CAROLINE ALMEIDA DE OLIVEIRA 8,00	4,00	2,00	4,00	42,00	60,00	Ampla Concorrência
@@ -694,7 +694,7 @@ export default function Home() {
     const candidatosNutricionista = parseCandidatos(dadosNutricionista);
     const candidatosPsicologo = parseCandidatos(dadosPsicologo);
 
-    
+
     const ordenadoGari = candidatosGari.sort((a, b) => b.total - a.total);
     const ordenadoMotorista = candidatosMotorista.sort((a, b) => b.total - a.total);
     const ordenadoOperadorMaquina = candidatosOperadorMaquina.sort((a, b) => b.total - a.total);
@@ -712,280 +712,114 @@ export default function Home() {
     const ordenadoNutricionista = candidatosNutricionista.sort((a, b) => b.total - a.total);
     const ordenadoPsicologo = candidatosPsicologo.sort((a, b) => b.total - a.total);
 
+    const tituloCategoria = (titulo: string) => {
+        return (
+            <h2 className="text-xl font-bold mb-2 uppercase">{titulo}</h2>
+        )
+    }
+
+    const tabela = (cargo: string, arrayOrdenadoDeDados: Candidato[]) => {
+        return (
+            <div className="flex flex-col">
+                {tituloCategoria(cargo)}
+
+                <table className="border-collapse border w-full">
+                    <thead className="">
+                        <tr className="bg-blue-800">
+                            <th className="border p-2">Posição</th>
+                            <th className="border p-2">Nome</th>
+                            <th className="border p-2">Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody className="">
+                        {arrayOrdenadoDeDados.map((candidato, i) => (
+                            <tr
+                                key={candidato.inscricao}
+                                className={i % 2 === 0 ? "bg-indigo-200 text-black" : "bg-indigo-700 text-white"}
+                            >
+                                <td className="border p-2 text-center">{i + 1}</td>
+                                <td className="border p-2">{candidato.nome}</td>
+                                <td className="border p-2 text-center">{candidato.total}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+
     return (
-        <div>
-            <div className="flex flex-col">
-                <h2>Garis</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoGari.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Motorista</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoMotorista.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Operador de maquina</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoOperadorMaquina.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Operario</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoOperario.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Pedreiro</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoPedreiro.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Pintor</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoPintor.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Servente</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoServente.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Assistente Administrativo</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoAdm.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Atendente farmacia</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoAtendenteFarmacia.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>tecnico de enfermagem</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoTecnicoDeEnfermagem.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>tecnico segurança do trabalho</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoTecnincoSegurancaTrabalho.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Enfermeira</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoEnfermeiro.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Fono</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoFono.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Fono</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoFono.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Medico</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoMedico.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Nutricionista</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoNutricionista.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
-            <div className="flex flex-col">
-                <h2>Psicologo</h2>
-                <ul className="p-4">
-                    {
-                        ordenadoPsicologo.map((candidato, i) => {
-                            return (
-                                <li key={candidato.inscricao} className="flex gap-4">
-                                    <p>{i + 1} </p>
-                                    <span>{candidato.nome}</span>
-                                    {candidato.total}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
+        <div className="p-4 bg-green-700">
+            <h1 className="font-bold text-2xl text-center">Classificação do Concurso Público de Joaquim Távora - PR</h1>
+            {
+                tabela('gari', ordenadoGari)
+            }
+
+            {
+                tabela('motorista', ordenadoMotorista)
+            }
+
+            {
+                tabela('operador de máquina', ordenadoOperadorMaquina)
+            }
+
+            {
+                tabela('operario', ordenadoOperario)
+            }
+
+            {
+                tabela('pedreiro', ordenadoPedreiro)
+            }
+
+            {
+                tabela('pintor', ordenadoPintor)
+            }
+
+            {
+                tabela('servente', ordenadoServente)
+            }
+
+            {
+                tabela('assistente Administrativo', ordenadoAdm)
+            }
+
+            {
+                tabela('assistente Administrativo', ordenadoAdm)
+            }
+
+            {
+                tabela('atendente de farmacia', ordenadoAtendenteFarmacia)
+            }
+
+            {
+                tabela('tecnico de enfermagem', ordenadoTecnicoDeEnfermagem)
+            }
+
+            {
+                tabela('tecnico de segurança do trabalho', ordenadoTecnincoSegurancaTrabalho)
+            }
+
+            {
+                tabela('enfermeira', ordenadoEnfermeiro)
+            }
+
+            {
+                tabela('fonoaudiologo', ordenadoFono)
+            }
+
+            {
+                tabela('medico', ordenadoMedico)
+            }
+
+            {
+                tabela('nutricionista', ordenadoNutricionista)
+            }
+
+            {
+                tabela('psicologo', ordenadoPsicologo)
+            }
+
         </div>
     );
 }
