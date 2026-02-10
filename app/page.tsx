@@ -1,6 +1,9 @@
-import Image from "next/image";
+'use client'
+
+import { useState } from "react";
 
 type Candidato = {
+    posicao: number
     inscricao: string;
     nome: string;
     nota1: number;
@@ -10,7 +13,6 @@ type Candidato = {
     total: number;
     categoria: string;
 };
-
 
 export default function Home() {
     const dadosGari = `
@@ -660,21 +662,19 @@ export default function Home() {
     function parseCandidatos(raw: string): Candidato[] {
         return raw
             .trim()
-            .split('\n')
-            .map(linha => {
-                const partes = linha.split('\t');
-
-                return {
-                    inscricao: partes[0],
-                    nome: partes[1],
-                    nota1: parseBRNumber(partes[2]),
-                    nota2: parseBRNumber(partes[3]),
-                    nota3: parseBRNumber(partes[4]),
-                    nota4: parseBRNumber(partes[5]),
-                    total: parseBRNumber(partes[6]),
-                    categoria: partes[7]
-                } as Candidato;
-            });
+            .split("\n")
+            .map((linha) => linha.split("\t"))
+            .map((colunas, index) => ({
+                posicao: index + 1,
+                inscricao: colunas[0],
+                nome: colunas[1],
+                nota1: Number(colunas[2].replace(",", ".")),
+                nota2: Number(colunas[3].replace(",", ".")),
+                nota3: Number(colunas[4].replace(",", ".")),
+                nota4: Number(colunas[5].replace(",", ".")),
+                total: Number(colunas[6].replace(",", ".")),
+                categoria: colunas[7]
+            }))
     }
 
     const candidatosGari = parseCandidatos(dadosGari);
@@ -695,22 +695,91 @@ export default function Home() {
     const candidatosPsicologo = parseCandidatos(dadosPsicologo);
 
 
-    const ordenadoGari = candidatosGari.sort((a, b) => b.total - a.total);
-    const ordenadoMotorista = candidatosMotorista.sort((a, b) => b.total - a.total);
-    const ordenadoOperadorMaquina = candidatosOperadorMaquina.sort((a, b) => b.total - a.total);
-    const ordenadoOperario = candidatosOperario.sort((a, b) => b.total - a.total);
-    const ordenadoPedreiro = candidatosPedreiro.sort((a, b) => b.total - a.total);
-    const ordenadoPintor = candidatosPintor.sort((a, b) => b.total - a.total);
-    const ordenadoServente = candidatosServente.sort((a, b) => b.total - a.total);
-    const ordenadoAdm = candidatosAdm.sort((a, b) => b.total - a.total);
-    const ordenadoAtendenteFarmacia = candidatosAtendenteFarmacia.sort((a, b) => b.total - a.total);
-    const ordenadoTecnicoDeEnfermagem = candidatosTecnicoDeEnfermagem.sort((a, b) => b.total - a.total);
-    const ordenadoTecnincoSegurancaTrabalho = candidatosTecnicoSegurancaTrabalho.sort((a, b) => b.total - a.total);
-    const ordenadoEnfermeiro = candidatosEnfermeiro.sort((a, b) => b.total - a.total);
-    const ordenadoFono = candidatosFonoaudiologo.sort((a, b) => b.total - a.total);
-    const ordenadoMedico = candidatosMedico.sort((a, b) => b.total - a.total);
-    const ordenadoNutricionista = candidatosNutricionista.sort((a, b) => b.total - a.total);
-    const ordenadoPsicologo = candidatosPsicologo.sort((a, b) => b.total - a.total);
+    const ordenadoGari = adicionarPosicoes(
+        [...candidatosGari].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoMotorista = adicionarPosicoes(
+        [...candidatosMotorista].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoOperadorMaquina = adicionarPosicoes(
+        [...candidatosOperadorMaquina].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoOperario = adicionarPosicoes(
+        [...candidatosOperario].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoPedreiro = adicionarPosicoes(
+        [...candidatosPedreiro].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoPintor = adicionarPosicoes(
+        [...candidatosPintor].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoServente = adicionarPosicoes(
+        [...candidatosServente].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoAdm = adicionarPosicoes(
+        [...candidatosAdm].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoAtendenteFarmacia = adicionarPosicoes(
+        [...candidatosAtendenteFarmacia].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoTecnicoDeEnfermagem = adicionarPosicoes(
+        [...candidatosTecnicoDeEnfermagem].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoTecnincoSegurancaTrabalho = adicionarPosicoes(
+        [...candidatosTecnicoSegurancaTrabalho].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoEnfermeiro = adicionarPosicoes(
+        [...candidatosEnfermeiro].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoFono = adicionarPosicoes(
+        [...candidatosFonoaudiologo].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoMedico = adicionarPosicoes(
+        [...candidatosMedico].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoNutricionista = adicionarPosicoes(
+        [...candidatosNutricionista].sort((a, b) => b.total - a.total)
+    );
+
+    const ordenadoPsicologo = adicionarPosicoes(
+        [...candidatosPsicologo].sort((a, b) => b.total - a.total)
+    );
+
+    const listas = [
+        { titulo: "gari", dados: ordenadoGari },
+        { titulo: "motorista", dados: ordenadoMotorista },
+        { titulo: "operador de máquina", dados: ordenadoOperadorMaquina },
+        { titulo: "operario", dados: ordenadoOperario },
+        { titulo: "pedreiro", dados: ordenadoPedreiro },
+        { titulo: "pintor", dados: ordenadoPintor },
+        { titulo: "servente", dados: ordenadoServente },
+        { titulo: "assistente administrativo", dados: ordenadoAdm },
+        { titulo: "atendente de farmacia", dados: ordenadoAtendenteFarmacia },
+        { titulo: "tecnico de enfermagem", dados: ordenadoTecnicoDeEnfermagem },
+        { titulo: "tecnico de segurança do trabalho", dados: ordenadoTecnincoSegurancaTrabalho },
+        { titulo: "enfermeira", dados: ordenadoEnfermeiro },
+        { titulo: "fonoaudiologo", dados: ordenadoFono },
+        { titulo: "medico", dados: ordenadoMedico },
+        { titulo: "nutricionista", dados: ordenadoNutricionista },
+        { titulo: "psicologo", dados: ordenadoPsicologo },
+    ]
+
+    const [busca, setBusca] = useState("");
+
 
     const tituloCategoria = (titulo: string) => {
         return (
@@ -719,6 +788,10 @@ export default function Home() {
     }
 
     const tabela = (cargo: string, arrayOrdenadoDeDados: Candidato[]) => {
+        if (arrayOrdenadoDeDados.length === 0) {
+            return null;
+        }
+
         return (
             <div className="flex flex-col">
                 {tituloCategoria(cargo)}
@@ -726,9 +799,9 @@ export default function Home() {
                 <table className="border-collapse border w-full">
                     <thead className="">
                         <tr className="bg-blue-800">
-                            <th className="border p-2">Posição</th>
-                            <th className="border p-2">Nome</th>
-                            <th className="border p-2">Total</th>
+                            <th className="border border-black p-2">Posição</th>
+                            <th className="border border-black p-2">Nome</th>
+                            <th className="border border-black p-2">Total</th>
                         </tr>
                     </thead>
 
@@ -736,11 +809,11 @@ export default function Home() {
                         {arrayOrdenadoDeDados.map((candidato, i) => (
                             <tr
                                 key={candidato.inscricao}
-                                className={i % 2 === 0 ? "bg-indigo-200 text-black" : "bg-indigo-700 text-white"}
+                                className={i % 2 === 0 ? "bg-blue-200 text-black" : "bg-blue-700 text-white"}
                             >
-                                <td className="border p-2 text-center">{i + 1}</td>
-                                <td className="border p-2">{candidato.nome}</td>
-                                <td className="border p-2 text-center">{candidato.total}</td>
+                                <td className="border border-black p-2 text-center">{candidato.posicao}º</td>
+                                <td className="border border-black p-2">{candidato.nome}</td>
+                                <td className="border border-black p-2 text-center">{candidato.total}pts</td>
                             </tr>
                         ))}
                     </tbody>
@@ -749,77 +822,47 @@ export default function Home() {
         )
     }
 
+    function filtrarPorNome<T extends { nome: string }>(lista: T[]) {
+        return lista.filter(c =>
+            c.nome.toLowerCase().includes(busca.toLowerCase())
+        );
+    }
+
+    function adicionarPosicoes(lista: Candidato[]) {
+        return lista.map((candidato, index) => ({
+            ...candidato,
+            posicao: index + 1
+        }));
+    }
+
+
+
     return (
-        <div className="p-4 bg-green-700">
-            <h1 className="font-bold text-2xl text-center">Classificação do Concurso Público de Joaquim Távora - PR</h1>
-            {
-                tabela('gari', ordenadoGari)
-            }
-
-            {
-                tabela('motorista', ordenadoMotorista)
-            }
-
-            {
-                tabela('operador de máquina', ordenadoOperadorMaquina)
-            }
-
-            {
-                tabela('operario', ordenadoOperario)
-            }
-
-            {
-                tabela('pedreiro', ordenadoPedreiro)
-            }
-
-            {
-                tabela('pintor', ordenadoPintor)
-            }
-
-            {
-                tabela('servente', ordenadoServente)
-            }
-
-            {
-                tabela('assistente Administrativo', ordenadoAdm)
-            }
-
-            {
-                tabela('assistente Administrativo', ordenadoAdm)
-            }
-
-            {
-                tabela('atendente de farmacia', ordenadoAtendenteFarmacia)
-            }
-
-            {
-                tabela('tecnico de enfermagem', ordenadoTecnicoDeEnfermagem)
-            }
-
-            {
-                tabela('tecnico de segurança do trabalho', ordenadoTecnincoSegurancaTrabalho)
-            }
-
-            {
-                tabela('enfermeira', ordenadoEnfermeiro)
-            }
-
-            {
-                tabela('fonoaudiologo', ordenadoFono)
-            }
-
-            {
-                tabela('medico', ordenadoMedico)
-            }
-
-            {
-                tabela('nutricionista', ordenadoNutricionista)
-            }
-
-            {
-                tabela('psicologo', ordenadoPsicologo)
-            }
-
+        <div className="p-4 bg-zinc-900 w-full max-h-screen min-h-screen grid grid-rows-[auto_1fr_auto] gap-8">
+            <div className="flex flex-col text-center">
+                <h1 className="font-bold text-2xl">Classificação do Concurso Público de Joaquim Távora - PR</h1>
+                <span className="text-sm">Não oficial, dados podem conter inconsistências...</span>
+            </div>
+            <div className="overflow-y-auto flex flex-col gap-8">
+                <div className="flex w-full rounded-lg">
+                    <input
+                        type="text"
+                        value={busca}
+                        onChange={(e) => setBusca(e.target.value)}
+                        placeholder="Buscar por nome..."
+                        className="bg-white h-[30px] outline-none w-full rounded-l-lg text-black p-2"
+                    />
+                    <button className="bg-blue-600 rounded-r-lg text-sm px-2">Buscar</button>
+                </div>
+                {
+                    listas.map(item =>
+                        tabela(item.titulo, filtrarPorNome(item.dados))
+                    )
+                }
+            </div>
+            <footer className="flex flex-col justify-center items-center">
+                <span className="text-center">© Produzido por Dimi Endrix Martins Miranda ©</span>
+            </footer>
         </div>
     );
 }
